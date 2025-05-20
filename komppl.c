@@ -13,7 +13,7 @@
 /* п р е д е л ь н ы е    */
 /* размеры:               */
 #define MAXNISXTXT 50 /* - исходного текста;    */
-#define NSINT 245     /* - табл.синтакс.правил; */
+#define NSINT 259     /* - табл.синтакс.правил; */
 #define NCEL 20       /* - стека целей;         */
 #define NDST 500      /* - стека достижений;    */
 #define NVXOD 56      /* - табл.входов;         */
@@ -188,14 +188,14 @@ struct
         {/*.   38     .*/ 0, 37, "*  ", 0},
         /*                                               вход с символа - C      */
         {/*.   39     .*/ 40, 0, "C  ", 0},
-        {/*.   40     .*/ 41, 39, "BUK", 0},
+        {/*.   40     .*/ 41, 39, "BUK", 153},
         {/*.   41     .*/ 0, 40, "*  ", 0},
         /*                                               вход с символа - D      */
         {/*.   42     .*/ 43, 0, "D  ", 0},
         {/*.   43     .*/ 44, 42, "BUK", 45},
         {/*.   44     .*/ 0, 43, "*  ", 0},
 
-        {/*.   45     .*/ 46, 42, "C  ", 0},
+        {/*.   45     .*/ 46, 42, "C  ", 248},
         {/*.   46     .*/ 47, 45, "L  ", 0},
         {/*.   47     .*/ 48, 46, "   ", 0},
         {/*.   48     .*/ 49, 47, "IPE", 0},
@@ -301,7 +301,7 @@ struct
         {/*.  134     .*/ 135, 133, "OPR", 0},
         {/*.  135     .*/ 0, 134, "*  ", 0},
         /*                                                вход с символа - CIF    */
-        {/*.  136     .*/ 137, 0, "CIF", 0},
+        {/*.  136     .*/ 137, 0, "CIF", 247},
         {/*.  137     .*/ 138, 136, "RZR", 0},
         {/*.  138     .*/ 0, 0, "*  ", 0},
         /*                                               вход с символа - RZR    */
@@ -342,7 +342,7 @@ struct
         {/*.  166     .*/ 167, 165, "LIT", 168},
         {/*.  167     .*/ 197, 166, "AVI", 0},
 
-        {/*.  168     .*/ 169, 165, "IPE", 0},
+        {/*.  168     .*/ 169, 165, "IPE", 245},
         {/*.  169     .*/ 170, 168, "AVI", 0},
         {/*.  170     .*/ 0, 169, "*  ", 0},
         /*                                               вход с символа - OPR    */
@@ -435,7 +435,23 @@ struct
 
         {/*.  242     .*/ 243, 0, "I  ", 0},
         {/*.  243     .*/ 244, 242, "BUK", 206},
-        {/*.  244     .*/ 0, 243, "*  ", 0}};
+        {/*.  244     .*/ 0, 243, "*  ", 0},
+
+        {/*.  245     .*/ 246, 168, "CIF", 0},
+        {/*.  246     .*/ 247, 245, "AVI", 0},
+        {/*.  247     .*/ 0, 246, "*  ", 0},
+
+        {/*.  248     .*/ 249, 0, "O  ", 0},
+        {/*.  249     .*/ 250, 248, ";  ", 0},
+        {/*.  250     .*/ 251, 249, "OPA", 0},
+        {/*.  251     .*/ 252, 250, "OPA", 0},
+        {/*.  252     .*/ 253, 251, "E  ", 0},
+        {/*.  253     .*/ 254, 252, "N  ", 0},
+        {/*.  254     .*/ 255, 253, "D  ", 0},
+        {/*.  255     .*/ 256, 254, ";  ", 0},
+        {/*.  256     .*/ 257, 255, "OPA", 0},
+        {/*.  257     .*/ 0, 256, "*  ", 0},
+};
 
 /*
 ***** Т а б л и ц а  входов в "кусты" ( корней )грамматических правил,
@@ -519,12 +535,12 @@ struct
 char TPR[NVXOD][NNETRM] =
     {
         /*
-           __________ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___
-          |       AVI:BUK:CIF:IDE:IPE:IPR:LIT:MAN:ODC:OEN:OPA:OPR:PRO:RZR:TEL:ZNK:COM:ITE:DCF|
-          |__________:___:___:___:___:___:___:___:___:___:___:___:___:___:___:___:___:___:___| */
+        __________ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___
+      |       AVI:BUK:CIF:IDE:IPE:IPR:LIT:MAN:ODC:OEN:OPA:OPR:PRO:RZR:TEL:ZNK:COM:ITE:DCF|
+      |__________:___:___:___:___:___:___:___:___:___:___:___:___:___:___:___:___:___:___| */
         {/*AVI*/ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         {/*BUK*/ 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {/*CIF*/ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+        {/*CIF*/ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
         {/*IDE*/ 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         {/*IPE*/ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0},
         {/*IPR*/ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
@@ -547,7 +563,7 @@ char TPR[NVXOD][NNETRM] =
           |__________:___:___:___:___:___:___:___:___:___:___:___:___:___:___:___:___:___:___| */
         {/*  A*/ 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         {/*  B*/ 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {/*  C*/ 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {/*  C*/ 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0},
         {/*  D*/ 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         {/*  E*/ 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         {/*  M*/ 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -792,7 +808,6 @@ L4:
       }
 
     L6:
-
       J = CEL[K - 1].CEL3;
       K--;
       goto L3;
@@ -945,7 +960,7 @@ FORM1:
         STROKA[i] == '(' || STROKA[i] == ')' ||
         STROKA[i] == ';' || STROKA[i] == '+' ||
         STROKA[i] == '-' || STROKA[i] == '=' ||
-        STROKA[i] == '*')
+        STROKA[i] == '*' || STROKA[i] == '<')
     {
       FORMT[IFORMT][i - j] = '\x0';
       IFORMT++;
@@ -1268,6 +1283,14 @@ int DO1()
   return 0;
 }
 
+int isDigit(char *digit)
+{
+  int digitMinCharNum = 48;
+  int digitMaxCharNum = 57;
+
+  return digit && digit[0] && digit[0] >= digitMinCharNum && digit[0] <= digitMaxCharNum;
+}
+
 /*..........................................................................*/
 
 /* п р о г р а м м а      */
@@ -1312,7 +1335,7 @@ int AVI2()
                                     (ASS_CARD._BUFCARD.OPERAND)] = ' ';
 
           memcpy(ASS_CARD._BUFCARD.COMM, /* и построчный коментарий*/
-                 "Загрузка переменной в регистр", 29);
+                 "Loading a variable into a register", 34);
 
           ZKARD();  /* запомнить операцию ас- */
                     /* семблера  и            */
@@ -1334,19 +1357,21 @@ int AVI2()
   {
     for (i = 0; i < ISYM; i++) /* если правый терм ариф- */
     {                          /* метического выражения  */
-      if (!strcmp(SYM[i].NAME, /*определен в табл.SYM,то:*/
-                  FORMT[IFORMT - 1]) &&
-          strlen(SYM[i].NAME) ==
-              strlen(FORMT[IFORMT - 1]))
+                               /*определен в табл.SYM,то:*/
+      int is_digit = isDigit(FORMT[IFORMT - 1]);
+
+      if (!strcmp(SYM[i].NAME, FORMT[IFORMT - 1]) &&
+              strlen(SYM[i].NAME) == strlen(FORMT[IFORMT - 1]) ||
+          is_digit)
       {
-        if (SYM[i].TYPE == 'B') /* если тип правого опе-  */
-        {                       /* ранда bin fixed, то:   */
+        if (SYM[i].TYPE == 'B' || is_digit) /* если тип правого опе-  */
+        {                                   /* ранда bin fixed, то:   */
 
           if (STROKA[DST[I2].DST4 - /* если знак опер."+",то: */
                      strlen(FORMT[IFORMT - 1])] == '+')
           {
-            if (strcmp(SYM[i].RAZR, "15") /* если разрядность прав. */
-                <= 0)                     /* операнда <= 15, то:    */
+            if (!is_digit && strcmp(SYM[i].RAZR, "15") /* если разрядность прав. */
+                                 <= 0)                 /* операнда <= 15, то:    */
               memcpy(ASS_CARD._BUFCARD.OPERAC,
                      "AH", 2); /* формируем код ассембле-*/
             else               /* ровской операции "AH",а*/
@@ -1386,8 +1411,8 @@ int AVI2()
           ASS_CARD._BUFCARD.OPERAND[strlen(ASS_CARD._BUFCARD.OPERAND)] = /* - разделяющий пробел;  */
               ' ';
           memcpy(ASS_CARD._BUFCARD.COMM,
-                 "Формирование промежуточного значения", /* - построчный коментарий*/
-                 36);
+                 "Formation of an intermediate value", /* - построчный коментарий*/
+                 35);
           ZKARD(); /* запоминание ассембле-  */
                    /* ровской операции       */
 
@@ -1533,62 +1558,67 @@ int OEN2()
   FORM(); /* форматируем ПЛ1-опера- */
           /* тор END                */
 
-  memcpy ( ASS_CARD._BUFCARD.OPERAND,"15,@R14", 7 );/* операнды команды и     */
+  memcpy(ASS_CARD._BUFCARD.OPERAND, "15,@R14", 7); /* операнды команды и     */
 
-  memcpy ( ASS_CARD._BUFCARD.COMM,                /* поле построчного комен-*/
-           "Return to the operating system", 31 );/* тария                  */
+  memcpy(ASS_CARD._BUFCARD.COMM,                /* поле построчного комен-*/
+         "Return to the operating system", 31); /* тария                  */
+  ZKARD();
 
-if(!strcmp(SYM[i].INIT,"0B")) 
+  if (!strcmp(SYM[i].INIT, "0B"))
   {
     memcpy(ASS_CARD._BUFCARD.OPERAC, "DS", 2);
     strcpy(ASS_CARD._BUFCARD.OPERAND, "H");
     memcpy(ASS_CARD._BUFCARD.COMM, "Reserve memory for variable C (uninitialized)", 46);
   }
-  else 
+  else
   {
 
-memcpy ( ASS_CARD._BUFCARD.COMM,          /* поле построчного комен-*/
-     "Reserve memory and initialize it", 32 );  /* тария                  */
-       }
+    memcpy(ASS_CARD._BUFCARD.COMM,                  /* поле построчного комен-*/
+           "Reserve memory and initialize it", 32); /* тария                  */
+  }
 
-memcpy ( ASS_CARD._BUFCARD.METKA, "@RBASE", 6 ); /* формирование EQU-псев- */
-  memcpy ( ASS_CARD._BUFCARD.OPERAC, "EQU",3 );   /* дооперации определения */
-  memcpy ( ASS_CARD._BUFCARD.OPERAND, "5", 1 );  /* номера базового регист-*/
-  memcpy ( ASS_CARD._BUFCARD.COMM, "Assign register 5 as the base register (@RBASE)", 48);              /* ра общего назначения   */
-              /*           и            */
-  ZKARD ();                                       /* запоминание ее         */
+  memcpy(ASS_CARD._BUFCARD.METKA, "@RBASE", 6);                                          /* формирование EQU-псев- */
+  memcpy(ASS_CARD._BUFCARD.OPERAC, "EQU", 3);                                            /* дооперации определения */
+  memcpy(ASS_CARD._BUFCARD.OPERAND, "5", 1);                                             /* номера базового регист-*/
+  memcpy(ASS_CARD._BUFCARD.COMM, "Assign register 5 as the base register (@RBASE)", 48); /* ра общего назначения   */
+                                                                                         /*           и            */
+  ZKARD();                                                                               /* запоминание ее         */
 
-  memcpy ( ASS_CARD._BUFCARD.METKA, "@R1", 3 );  /* формирование EQU-псев- */
-  memcpy ( ASS_CARD._BUFCARD.OPERAC, "EQU",3 );   /* дооперации определения */
-  memcpy ( ASS_CARD._BUFCARD.OPERAND, "2", 1 );   /* номера базового регист-*/
-  memcpy ( ASS_CARD._BUFCARD.COMM, "Assign register 2 for use as @R1", 33 );              /* ра общего назначения   */
-              /*            и           */
-  ZKARD ();                                       /* запоминание ее         */
-  
-  memcpy ( ASS_CARD._BUFCARD.METKA, "@R2", 3 ); /* формирование EQU-псев- */
-  memcpy ( ASS_CARD._BUFCARD.OPERAC, "EQU",3 );   /* дооперации определения */
-  memcpy ( ASS_CARD._BUFCARD.OPERAND, "3", 1 );  /* номера базового регист-*/
-  memcpy ( ASS_CARD._BUFCARD.COMM, "Assign register 3 for use as @R2", 33 );  /* номера базового регист-*/
+  memcpy(ASS_CARD._BUFCARD.METKA, "@R1", 3);                              /* формирование EQU-псев- */
+  memcpy(ASS_CARD._BUFCARD.OPERAC, "EQU", 3);                             /* дооперации определения */
+  memcpy(ASS_CARD._BUFCARD.OPERAND, "2", 1);                              /* номера базового регист-*/
+  memcpy(ASS_CARD._BUFCARD.COMM, "Assign register 2 for use as @R1", 33); /* ра общего назначения   */
+                                                                          /*            и           */
+  ZKARD();                                                                /* запоминание ее         */
+
+  memcpy(ASS_CARD._BUFCARD.METKA, "@R2", 3);                              /* формирование EQU-псев- */
+  memcpy(ASS_CARD._BUFCARD.OPERAC, "EQU", 3);                             /* дооперации определения */
+  memcpy(ASS_CARD._BUFCARD.OPERAND, "3", 1);                              /* номера базового регист-*/
+  memcpy(ASS_CARD._BUFCARD.COMM, "Assign register 3 for use as @R2", 33); /* номера базового регист-*/
 
   ZKARD();
 
-  memcpy ( ASS_CARD._BUFCARD.METKA, "@R14", 4 ); /* формирование EQU-псев- */
-  memcpy ( ASS_CARD._BUFCARD.OPERAC, "EQU",3 );   /* дооперации определения */
-  memcpy ( ASS_CARD._BUFCARD.OPERAND, "14", 2 );  /* номера базового регист-*/
-  memcpy ( ASS_CARD._BUFCARD.COMM, "Assign register 14 for use as @R14 (return address)\n", 52 );  /* номера базового регист-*/
+  memcpy(ASS_CARD._BUFCARD.METKA, "@R14", 4);                                                  /* формирование EQU-псев- */
+  memcpy(ASS_CARD._BUFCARD.OPERAC, "EQU", 3);                                                  /* дооперации определения */
+  memcpy(ASS_CARD._BUFCARD.OPERAND, "14", 2);                                                  /* номера базового регист-*/
+  memcpy(ASS_CARD._BUFCARD.COMM, "Assign register 14 for use as @R14 (return address)\n", 52); /* номера базового регист-*/
   ZKARD();
 
-// while ( FORMT [1][i] != '\x0' )                 /* ее операнда            */
+  // while ( FORMT [1][i] != '\x0' )                 /* ее операнда            */
   // ASS_CARD._BUFCARD.OPERAND [i] = FORMT [1][i++];/*         и              */
 
-  memcpy ( ASS_CARD._BUFCARD.COMM,                /* построчного коментария */
-        "End of program", 15 );
-
+  memcpy(ASS_CARD._BUFCARD.COMM, /* построчного коментария */
+         "End of program", 15);
 
   ZKARD(); /* запоминание псевдоопе- */
            /* рации                  */
 
   return 0; /* завершение программы   */
+}
+
+int beginDoSection()
+{
+  return FORMT[0] && FORMT[0][0] == 'D' && FORMT[0][1] == 'O';
 }
 
 /*..........................................................................*/
@@ -1606,6 +1636,9 @@ int OPA2()
 
   FORM(); /*форматируем ПЛ1-оператор*/
           /*присваивания арифметич. */
+
+  if (beginDoSection())
+    return 0;
 
   for (i = 0; i < ISYM; i++)
   {                                       /* если идентификатор пра-*/
@@ -1636,8 +1669,7 @@ int OPA2()
                                   (ASS_CARD._BUFCARD.OPERAND)] = ' ';
 
         memcpy(ASS_CARD._BUFCARD.COMM, /* построчный коментарий  */
-               "Формирование значения арифм.выражения",
-               37);
+               "Formation of the value of an arithm.expression", 46);
         ZKARD();  /* запомнить операцию     */
                   /* Ассемблера  и          */
         return 0; /* завершить программу    */
@@ -1698,6 +1730,7 @@ int OPR2()
          "*,@RBASE", 8);
   memcpy(ASS_CARD._BUFCARD.COMM,
          "Declare @RBASE as base register", 32);
+  ZKARD();
 
   return 0; /* завершить подпрограмму */
 }
@@ -1784,14 +1817,14 @@ int ITE2()
 
   // LH R1, FORMT[1]
   memcpy(ASS_CARD._BUFCARD.OPERAC, "LH", 2);
-  sprintf(ASS_CARD._BUFCARD.OPERAND, "@R1,%s", FORMT[1]);
-  sprintf(ASS_CARD._BUFCARD.COMM, "Load value of %s into register @R1", FORMT[1]);
+  sprintf(ASS_CARD._BUFCARD.OPERAND, "@R1,%s", FORMT[0]);
+  sprintf(ASS_CARD._BUFCARD.COMM, "Load value of %sinto register @R1", FORMT[1]);
   ZKARD();
 
   // LH R2, FORMT[2]
   memcpy(ASS_CARD._BUFCARD.OPERAC, "LH", 2);
-  sprintf(ASS_CARD._BUFCARD.OPERAND, "@R2,%s", FORMT[2]);
-  sprintf(ASS_CARD._BUFCARD.COMM, "Load value of %s into register @R2", FORMT[2]);
+  sprintf(ASS_CARD._BUFCARD.OPERAND, "@R2,%s", FORMT[1]);
+  sprintf(ASS_CARD._BUFCARD.COMM, "Load value of %sinto register @R2", FORMT[2]);
   ZKARD();
 
   // CR @R1,@R2
