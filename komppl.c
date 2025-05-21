@@ -1575,6 +1575,8 @@ int OEN2()
   FORM(); /* форматируем ПЛ1-опера- */
           /* тор END                */
 
+  char *labelEndIf = "@ENDIF";
+  strcpy(ASS_CARD._BUFCARD.METKA, labelEndIf);
   memcpy(ASS_CARD._BUFCARD.OPERAC, "BCR", 3);      /* операнды команды и     */
   memcpy(ASS_CARD._BUFCARD.OPERAND, "15,@R14", 7); /* операнды команды и     */
 
@@ -1965,7 +1967,13 @@ int TLS1()
 
 int TLS2()
 {
-  FORM();
+  char *labelEndIf = "@ENDIF";
+
+  // JMP @LARGER
+  memcpy(ASS_CARD._BUFCARD.OPERAC, "JMP", 3);
+  memcpy(ASS_CARD._BUFCARD.OPERAND, labelEndIf, strlen(labelEndIf));
+  memcpy(ASS_CARD._BUFCARD.COMM, "jump to @ENDIF", 15);
+  ZKARD();
 
   char *labelLarger = "@LARGER";
   strcpy(ASS_CARD._BUFCARD.METKA, labelLarger);
@@ -1975,20 +1983,11 @@ int TLS2()
 
 int ENF1()
 {
-  FORM();
-
   return 0;
 }
 
 int ENF2()
 {
-  FORM();
-
-  // BC 15,@STORE
-  // memcpy(ASS_CARD._BUFCARD.OPERAC, "BC", 2);
-  // sprintf(ASS_CARD._BUFCARD.OPERAND, "15,%s", labelStore);
-  // memcpy(ASS_CARD._BUFCARD.COMM, "Unconditional jump to @STORE", 29);
-  // ZKARD();
   return 0;
 }
 
