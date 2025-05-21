@@ -24,7 +24,7 @@
                       /* терпретируемого  фраг- */
                       /* мента исх.текста;      */
 #define MAX_REGISTERS 3
-#define NSYM 100      /* - таблицы имен и меток */
+#define NSYM 100 /* - таблицы имен и меток */
 
 /*
 ***** Б а з а  данных компилятора
@@ -36,6 +36,10 @@
 
 int NISXTXT;                 /* длина массива          */
 char ISXTXT[MAXNISXTXT][80]; /* тело массива           */
+
+char *R1 = "@R1";
+char *R2 = "@R2";
+char *R14 = "@R14";
 
 /*
 ***** Б л о к  об'явления рабочих переменных
@@ -612,7 +616,7 @@ char TPR[NVXOD][NNETRM] =
       |       AVI:BUK:CIF:IDE:IPE:IPR:LIT:MAN:ODC:OEN:OPA:OPR:PRO:RZR:TEL:ZNK:COM:ITH:DCF:TLS:ENF|
       |__________:___:___:___:___:___:___:___:___:___:___:___:___:___:___:___:___:___:___:___:___| */
         {/*  F*/ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {/*  =*/ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {/*  =*/0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         {/*  H*/ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         {/*  **/ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
         {/*  <*/ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
@@ -1317,6 +1321,9 @@ int AVI2()
           /*арифметического ПЛ1-опе-*/
           /*ратора присваивания     */
 
+  char *operand;
+  sprintf(operand, "%s,", R1);
+
   if (IFORMT == 1)                          /* если правая часть одно-*/
   {                                         /* термовая, то:          */
     for (i = 0; i < ISYM; i++)              /* ищем этот терм в табли-*/
@@ -1327,7 +1334,6 @@ int AVI2()
       {
         if (SYM[i].TYPE == 'B') /* в случае типа=bin fixed*/
         {
-
           if (strcmp(SYM[i].RAZR, "15") /* и разрядности <= 15    */
               <= 0)
             memcpy(ASS_CARD._BUFCARD.OPERAC, /* формируем код ассембле-*/
@@ -1338,7 +1344,7 @@ int AVI2()
                                              /* ровской операции L     */
 
           strcpy(ASS_CARD._BUFCARD.OPERAND, /*       формируем        */
-                 "RRAB,");                  /*       первый  и        */
+                 operand);                  /*       первый  и        */
           strcat(ASS_CARD._BUFCARD.OPERAND, /* второй операнды ассемб-*/
                  FORMT[0]);                 /* леровской операции     */
 
@@ -1416,7 +1422,7 @@ int AVI2()
           }
           /* формируем:             */
           strcpy(ASS_CARD._BUFCARD.OPERAND,                              /* - первый операнд ассем-*/
-                 "RRAB,");                                               /*блеровской операции;    */
+                 operand);                                               /*блеровской операции;    */
           strcat(ASS_CARD._BUFCARD.OPERAND,                              /* - второй операнд ассем-*/
                  FORMT[IFORMT - 1]);                                     /*блеровской операции;    */
           ASS_CARD._BUFCARD.OPERAND[strlen(ASS_CARD._BUFCARD.OPERAND)] = /* - разделяющий пробел;  */
@@ -1569,23 +1575,57 @@ int OEN2()
   FORM(); /* форматируем ПЛ1-опера- */
           /* тор END                */
 
+  memcpy(ASS_CARD._BUFCARD.OPERAC, "BCR", 3);      /* операнды команды и     */
   memcpy(ASS_CARD._BUFCARD.OPERAND, "15,@R14", 7); /* операнды команды и     */
 
   memcpy(ASS_CARD._BUFCARD.COMM,                /* поле построчного комен-*/
          "Return to the operating system", 31); /* тария                  */
   ZKARD();
 
-  if (!strcmp(SYM[i].INIT, "0B"))
+  for (i = 0; i < ISYM; i++)
   {
-    memcpy(ASS_CARD._BUFCARD.OPERAC, "DS", 2);
-    strcpy(ASS_CARD._BUFCARD.OPERAND, "H");
-    memcpy(ASS_CARD._BUFCARD.COMM, "Reserve memory for variable C (uninitialized)", 46);
-  }
-  else
-  {
+    if (isalpha(SYM[i].NAME[0]))
 
-    memcpy(ASS_CARD._BUFCARD.COMM,                  /* поле построчного комен-*/
-           "Reserve memory and initialize it", 32); /* тария                  */
+    {
+      if (SYM[i].TYPE == 'B')
+
+      {
+        strcpy(ASS_CARD._BUFCARD.METKA,
+               SYM[i].NAME);
+
+        ASS_CARD._BUFCARD.METKA[strlen(ASS_CARD._BUFCARD.METKA)] = ' ';
+
+        memcpy(ASS_CARD._BUFCARD.OPERAC,
+               "DC", 2);
+
+        char symbol = ' ';
+        
+        if (strcmp(SYM[i].RAZR, "15") <= 0)
+          symbol = 'H';
+        else
+          symbol = 'F';
+
+        int value = VALUE(SYM[i].INIT);
+
+        if (value)
+        {
+          char valueStr[12] = "            ";
+          sprintf(valueStr, "%c\'%i\'", symbol, value);
+
+          strcpy(ASS_CARD._BUFCARD.OPERAND, valueStr);
+          memcpy(ASS_CARD._BUFCARD.COMM,
+                 "Reserve memory and initialize it", 33);
+        }
+        else
+        {
+          ASS_CARD._BUFCARD.OPERAND[0] = symbol;
+          memcpy(ASS_CARD._BUFCARD.COMM,
+                 "Reserve memory for uninitialized variable", 42);
+        }
+
+        ZKARD();
+      }
+    }
   }
 
   memcpy(ASS_CARD._BUFCARD.METKA, "@RBASE", 6);                                          /* формирование EQU-псев- */
@@ -1670,8 +1710,10 @@ int OPA2()
           memcpy(ASS_CARD._BUFCARD.OPERAC, /* команду записи слова   */
                  "ST", 2);
 
+        char *operand;
+        sprintf(operand, "%s,", R1);
         strcpy(ASS_CARD._BUFCARD.OPERAND, /*       доформировать    */
-               "RRAB,");                  /*          операнды      */
+               operand);                  /*          операнды      */
 
         strcat(ASS_CARD._BUFCARD.OPERAND, /*           команды      */
                FORMT[0]);
@@ -1680,7 +1722,7 @@ int OPA2()
                                   (ASS_CARD._BUFCARD.OPERAND)] = ' ';
 
         memcpy(ASS_CARD._BUFCARD.COMM, /* построчный коментарий  */
-               "Formation of the value of an arithm.expression", 46);
+               "Store result into variable", 27);
         ZKARD();  /* запомнить операцию     */
                   /* Ассемблера  и          */
         return 0; /* завершить программу    */
@@ -1818,23 +1860,24 @@ int ITH1()
   return 0;
 }
 
-char * REGISTERS [MAX_REGISTERS][2] = 
-{
-  "", "@R1"
-  "", "@R2"
-  "", "@R14"
-};
+char *REGISTERS[MAX_REGISTERS][2] =
+    {{" ", "@R1"},
+     {" ", "@R2"},
+     {" ", "@R14"}};
 
-void PutToRegister(char * reg, char * ipe)
+void PutToRegister(char *reg, char *ipe)
 {
   for (int i = 0; i < MAX_REGISTERS; i++)
   {
     if (!strcmp(REGISTERS[i][1], reg))
-      memcpy(REGISTERS[i][0], ipe, strlen(ipe));
+    {
+      REGISTERS[i][0] = ipe;
+      break;
+    }
   }
 }
 
-char * GetFromRegister(char * ipe)
+char *GetFromRegister(char *ipe)
 {
   for (int i = 0; i < MAX_REGISTERS; i++)
   {
@@ -1845,66 +1888,51 @@ char * GetFromRegister(char * ipe)
   return "";
 }
 
-
 int ITH2()
 {
   FORM(); // заполняет массив FORMT[3][8] — разобранное выражение
 
-  char labelLess[10];
-  sprintf(labelLess, "@LESS");
+  char *labelLess = "@LESS";
+  char *labelLarger = "@LARGER";
+
+  char *variable1 = FORMT[0];
+  PutToRegister(R1, variable1);
 
   // LH R1, FORMT[1]
   memcpy(ASS_CARD._BUFCARD.OPERAC, "LH", 2);
-  sprintf(ASS_CARD._BUFCARD.OPERAND, "@R1,%s", FORMT[0]);
-  sprintf(ASS_CARD._BUFCARD.COMM, "Load value of %sinto register @R1", FORMT[1]);
+  sprintf(ASS_CARD._BUFCARD.OPERAND, "%s,%s", R1, variable1);
+  sprintf(ASS_CARD._BUFCARD.COMM, "Load value of %sinto register %s", variable1, R1);
   ZKARD();
+
+  char *variable2 = FORMT[1];
+  PutToRegister(R2, variable2);
 
   // LH R2, FORMT[2]
   memcpy(ASS_CARD._BUFCARD.OPERAC, "LH", 2);
-  sprintf(ASS_CARD._BUFCARD.OPERAND, "@R2,%s", FORMT[1]);
-  sprintf(ASS_CARD._BUFCARD.COMM, "Load value of %sinto register @R2", FORMT[2]);
+  sprintf(ASS_CARD._BUFCARD.OPERAND, "%s,%s", R2, variable2);
+  sprintf(ASS_CARD._BUFCARD.COMM, "Load value of %sinto register %s", variable2, R2);
   ZKARD();
 
   // CR @R1,@R2
-  memcpy(ASS_CARD._BUFCARD.OPERAC, "CR", 2);
+  memcpy(ASS_CARD._BUFCARD.OPERAC, "CMP", 3);
   strcpy(ASS_CARD._BUFCARD.OPERAND, "@R1,@R2");
   memcpy(ASS_CARD._BUFCARD.COMM, "Compare values in @R1 and @R2", 30);
   ZKARD();
 
-  // BCR 4,@LESS
-  memcpy(ASS_CARD._BUFCARD.OPERAC, "BCR", 3);
-  sprintf(ASS_CARD._BUFCARD.OPERAND, "4,%s", labelLess);
+  // JL @LESS
+  memcpy(ASS_CARD._BUFCARD.OPERAC, "JL", 2);
+  memcpy(ASS_CARD._BUFCARD.OPERAND, labelLess, strlen(labelLess));
   memcpy(ASS_CARD._BUFCARD.COMM, "If @R1 < @R2, jump to @LESS", 28);
   ZKARD();
 
-  
+  // JMP @LARGER
+  memcpy(ASS_CARD._BUFCARD.OPERAC, "JMP", 3);
+  memcpy(ASS_CARD._BUFCARD.OPERAND, labelLarger, strlen(labelLarger));
+  memcpy(ASS_CARD._BUFCARD.COMM, "else, jump to @LARGER", 22);
+  ZKARD();
 
-  // // BC 15,@STORE
-  // memcpy(ASS_CARD._BUFCARD.OPERAC, "BC", 2);
-  // sprintf(ASS_CARD._BUFCARD.OPERAND, "15,%s", labelStore);
-  // memcpy(ASS_CARD._BUFCARD.COMM, "Unconditional jump to @STORE", 29);
-  // ZKARD();
-
-  // @LESS: SR @R2,@R1 (B - A)
+  // @LESS:
   strcpy(ASS_CARD._BUFCARD.METKA, labelLess);
-  memcpy(ASS_CARD._BUFCARD.OPERAC, "SR", 2);
-  strcpy(ASS_CARD._BUFCARD.OPERAND, "@R2,@R1");
-  memcpy(ASS_CARD._BUFCARD.COMM, "Compute B - A", 14);
-  ZKARD();
-
-  // LR @R1,@R2
-  memset(ASS_CARD._BUFCARD.METKA, ' ', 8);
-  memcpy(ASS_CARD._BUFCARD.OPERAC, "LR", 2);
-  strcpy(ASS_CARD._BUFCARD.OPERAND, "@R1,@R2");
-  memcpy(ASS_CARD._BUFCARD.COMM, "Copy result to @R1", 19);
-  ZKARD();
-
-  // @STORE: STH @R1, FORMT[0]
-  // strcpy(ASS_CARD._BUFCARD.METKA, labelStore);
-  // memcpy(ASS_CARD._BUFCARD.OPERAC, "STH", 3);
-  // sprintf(ASS_CARD._BUFCARD.OPERAND, "@R1,%s", FORMT[0]);
-  // sprintf(ASS_CARD._BUFCARD.COMM, "Store result into variable %s", FORMT[0]);
-  // ZKARD();
 
   return 0;
 }
@@ -1939,13 +1967,8 @@ int TLS2()
 {
   FORM();
 
-  // FORMT[0]
-
-  // SR @R1,@R2 (A - B)
-  memcpy(ASS_CARD._BUFCARD.OPERAC, "SR", 2);
-  strcpy(ASS_CARD._BUFCARD.OPERAND, "@R1,@R2");
-  memcpy(ASS_CARD._BUFCARD.COMM, "Compute B - A (if A < B)", 26);
-  ZKARD();
+  char *labelLarger = "@LARGER";
+  strcpy(ASS_CARD._BUFCARD.METKA, labelLarger);
 
   return 0;
 }
@@ -1961,6 +1984,11 @@ int ENF2()
 {
   FORM();
 
+  // BC 15,@STORE
+  // memcpy(ASS_CARD._BUFCARD.OPERAC, "BC", 2);
+  // sprintf(ASS_CARD._BUFCARD.OPERAND, "15,%s", labelStore);
+  // memcpy(ASS_CARD._BUFCARD.COMM, "Unconditional jump to @STORE", 29);
+  // ZKARD();
   return 0;
 }
 
