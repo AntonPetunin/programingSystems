@@ -23,6 +23,7 @@
 #define MAXFORMT 30   /* - форматированного ин- */
                       /* терпретируемого  фраг- */
                       /* мента исх.текста;      */
+#define MAX_REGISTERS 3
 #define NSYM 100      /* - таблицы имен и меток */
 
 /*
@@ -394,12 +395,12 @@ struct
         {/*.  207     .*/ 208, 206, "   ", 0},
         {/*.  208     .*/ 209, 207, "COM", 0},
         {/*.  209     .*/ 210, 208, "   ", 0},
-        {/*.  210     .*/ 211, 209, "THN", 0},
-        {/*.  211     .*/ 212, 210, "ELS", 0},
-        {/*.  212     .*/ 213, 211, "ITE", 0},
+        {/*.  210     .*/ 211, 209, "TLS", 0},
+        {/*.  211     .*/ 212, 210, "ENF", 0},
+        {/*.  212     .*/ 213, 211, "ITH", 0},
         {/*.  213     .*/ 0, 212, "*  ", 0},
 
-        {/*.  214     .*/ 215, 179, "ITE", 0},
+        {/*.  214     .*/ 215, 179, "ITH", 0},
         {/*.  215     .*/ 216, 214, "TEL", 0},
         {/*.  216     .*/ 0, 215, "*  ", 0},
 
@@ -431,16 +432,16 @@ struct
         {/*.  236     .*/ 237, 235, "AVI", 0},
         {/*.  237     .*/ 0, 236, "*  ", 0},
 
-        // THN
+        // TLS
         {/*.  238     .*/ 239, 0, "H  ", 0},
         {/*.  239     .*/ 240, 238, "E  ", 238},
         {/*.  240     .*/ 241, 239, "N  ", 0},
         {/*.  241     .*/ 242, 240, "   ", 0},
         {/*.  242     .*/ 243, 241, "OPA", 0},
-        {/*.  243     .*/ 244, 242, "THN", 0},
+        {/*.  243     .*/ 244, 242, "TLS", 0},
         {/*.  244     .*/ 0, 243, "*  ", 0},
 
-        // ELS
+        // ENF
         {/*.  245     .*/ 246, 0, "L  ", 0},
         {/*.  246     .*/ 247, 245, "S  ", 0},
         {/*.  247     .*/ 248, 246, "E  ", 0},
@@ -454,7 +455,7 @@ struct
         {/*.  255     .*/ 256, 254, "N  ", 0},
         {/*.  256     .*/ 257, 255, "D  ", 0},
         {/*.  257     .*/ 258, 256, ";  ", 0},
-        {/*.  258     .*/ 259, 257, "ELS", 0},
+        {/*.  258     .*/ 259, 257, "ENF", 0},
         {/*.  259     .*/ 0, 258, "*  ", 0},
 };
 
@@ -491,10 +492,10 @@ struct
         {/*.  15     .*/ "TEL", 179, 'N'},
         {/*.  16     .*/ "ZNK", 0, 'N'},
         {/*.  17     .*/ "COM", 0, 'N'},
-        {/*.  18     .*/ "ITE", 214, 'N'},
+        {/*.  18     .*/ "ITH", 214, 'N'},
         {/*.  19     .*/ "DCF", 217, 'N'},
-        {/*.  20     .*/ "THN", 248, 'N'}, // then
-        {/*.  21     .*/ "ELS", 255, 'N'}, // else
+        {/*.  20     .*/ "TLS", 248, 'N'}, // then
+        {/*.  21     .*/ "ENF", 255, 'N'}, // else
         {/*.  22     .*/ "A  ", 33, 'T'},
         {/*.  23     .*/ "B  ", 36, 'T'},
         {/*.  24     .*/ "C  ", 39, 'T'},
@@ -543,7 +544,7 @@ char TPR[NVXOD][NNETRM] =
     {
         /*
        __________ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___
-      |       AVI:BUK:CIF:IDE:IPE:IPR:LIT:MAN:ODC:OEN:OPA:OPR:PRO:RZR:TEL:ZNK:COM:ITE:DCF:THN:ELS|
+      |       AVI:BUK:CIF:IDE:IPE:IPR:LIT:MAN:ODC:OEN:OPA:OPR:PRO:RZR:TEL:ZNK:COM:ITH:DCF:TLS:ENF|
       |__________:___:___:___:___:___:___:___:___:___:___:___:___:___:___:___:___:___:___:___:___| */
         {/*AVI*/ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         {/*BUK*/ 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -562,13 +563,13 @@ char TPR[NVXOD][NNETRM] =
         {/*TEL*/ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
         {/*ZNK*/ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         {/*COM*/ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {/*ITE*/ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {/*ITH*/ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         {/*DCF*/ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0},
-        {/*THN*/ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {/*ELS*/ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {/*TLS*/ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {/*ENF*/ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         /*
        __________ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___
-      |       AVI:BUK:CIF:IDE:IPE:IPR:LIT:MAN:ODC:OEN:OPA:OPR:PRO:RZR:TEL:ZNK:COM:ITE:DCF:THN:ELS|
+      |       AVI:BUK:CIF:IDE:IPE:IPR:LIT:MAN:ODC:OEN:OPA:OPR:PRO:RZR:TEL:ZNK:COM:ITH:DCF:TLS:ENF|
       |__________:___:___:___:___:___:___:___:___:___:___:___:___:___:___:___:___:___:___:___:___| */
         {/*  A*/ 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         {/*  B*/ 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -588,7 +589,7 @@ char TPR[NVXOD][NNETRM] =
         {/*  7*/ 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         /*
        __________ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___
-      |       AVI:BUK:CIF:IDE:IPE:IPR:LIT:MAN:ODC:OEN:OPA:OPR:PRO:RZR:TEL:ZNK:COM:ITE:DCF:THN:ELS|
+      |       AVI:BUK:CIF:IDE:IPE:IPR:LIT:MAN:ODC:OEN:OPA:OPR:PRO:RZR:TEL:ZNK:COM:ITH:DCF:TLS:ENF|
       |__________:___:___:___:___:___:___:___:___:___:___:___:___:___:___:___:___:___:___:___:___| */
         {/*  8*/ 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         {/*  9*/ 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -608,7 +609,7 @@ char TPR[NVXOD][NNETRM] =
         {/*  L*/ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         /*
        __________ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___
-      |       AVI:BUK:CIF:IDE:IPE:IPR:LIT:MAN:ODC:OEN:OPA:OPR:PRO:RZR:TEL:ZNK:COM:ITE:DCF:THN:ELS|
+      |       AVI:BUK:CIF:IDE:IPE:IPR:LIT:MAN:ODC:OEN:OPA:OPR:PRO:RZR:TEL:ZNK:COM:ITH:DCF:TLS:ENF|
       |__________:___:___:___:___:___:___:___:___:___:___:___:___:___:___:___:___:___:___:___:___| */
         {/*  F*/ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         {/*  =*/ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -1812,18 +1813,45 @@ int ZNK2()
 }
 
 // Добавили реализацию наших функций под наше тз
-int ITE1()
+int ITH1()
 {
   return 0;
 }
 
-int ITE2()
+char * REGISTERS [MAX_REGISTERS][2] = 
+{
+  "", "@R1"
+  "", "@R2"
+  "", "@R14"
+};
+
+void PutToRegister(char * reg, char * ipe)
+{
+  for (int i = 0; i < MAX_REGISTERS; i++)
+  {
+    if (!strcmp(REGISTERS[i][1], reg))
+      memcpy(REGISTERS[i][0], ipe, strlen(ipe));
+  }
+}
+
+char * GetFromRegister(char * ipe)
+{
+  for (int i = 0; i < MAX_REGISTERS; i++)
+  {
+    if (!strcmp(REGISTERS[i][0], ipe))
+      return REGISTERS[i][1];
+  }
+
+  return "";
+}
+
+
+int ITH2()
 {
   FORM(); // заполняет массив FORMT[3][8] — разобранное выражение
 
-  char labelLess[10], labelStore[10];
+  char labelLess[10];
   sprintf(labelLess, "@LESS");
-  sprintf(labelStore, "@STORE");
 
   // LH R1, FORMT[1]
   memcpy(ASS_CARD._BUFCARD.OPERAC, "LH", 2);
@@ -1849,17 +1877,13 @@ int ITE2()
   memcpy(ASS_CARD._BUFCARD.COMM, "If @R1 < @R2, jump to @LESS", 28);
   ZKARD();
 
-  // SR @R1,@R2 (A - B)
-  memcpy(ASS_CARD._BUFCARD.OPERAC, "SR", 2);
-  strcpy(ASS_CARD._BUFCARD.OPERAND, "@R1,@R2");
-  memcpy(ASS_CARD._BUFCARD.COMM, "Compute A - B (if A >= B)", 26);
-  ZKARD();
+  
 
-  // BC 15,@STORE
-  memcpy(ASS_CARD._BUFCARD.OPERAC, "BC", 2);
-  sprintf(ASS_CARD._BUFCARD.OPERAND, "15,%s", labelStore);
-  memcpy(ASS_CARD._BUFCARD.COMM, "Unconditional jump to @STORE", 29);
-  ZKARD();
+  // // BC 15,@STORE
+  // memcpy(ASS_CARD._BUFCARD.OPERAC, "BC", 2);
+  // sprintf(ASS_CARD._BUFCARD.OPERAND, "15,%s", labelStore);
+  // memcpy(ASS_CARD._BUFCARD.COMM, "Unconditional jump to @STORE", 29);
+  // ZKARD();
 
   // @LESS: SR @R2,@R1 (B - A)
   strcpy(ASS_CARD._BUFCARD.METKA, labelLess);
@@ -1876,11 +1900,11 @@ int ITE2()
   ZKARD();
 
   // @STORE: STH @R1, FORMT[0]
-  strcpy(ASS_CARD._BUFCARD.METKA, labelStore);
-  memcpy(ASS_CARD._BUFCARD.OPERAC, "STH", 3);
-  sprintf(ASS_CARD._BUFCARD.OPERAND, "@R1,%s", FORMT[0]);
-  sprintf(ASS_CARD._BUFCARD.COMM, "Store result into variable %s", FORMT[0]);
-  ZKARD();
+  // strcpy(ASS_CARD._BUFCARD.METKA, labelStore);
+  // memcpy(ASS_CARD._BUFCARD.OPERAC, "STH", 3);
+  // sprintf(ASS_CARD._BUFCARD.OPERAND, "@R1,%s", FORMT[0]);
+  // sprintf(ASS_CARD._BUFCARD.COMM, "Store result into variable %s", FORMT[0]);
+  // ZKARD();
 
   return 0;
 }
@@ -1902,6 +1926,41 @@ int DCF1()
 
 int DCF2()
 {
+  return 0;
+}
+
+int TLS1()
+{
+  FORM();
+  return 0;
+}
+
+int TLS2()
+{
+  FORM();
+
+  // FORMT[0]
+
+  // SR @R1,@R2 (A - B)
+  memcpy(ASS_CARD._BUFCARD.OPERAC, "SR", 2);
+  strcpy(ASS_CARD._BUFCARD.OPERAND, "@R1,@R2");
+  memcpy(ASS_CARD._BUFCARD.COMM, "Compute B - A (if A < B)", 26);
+  ZKARD();
+
+  return 0;
+}
+
+int ENF1()
+{
+  FORM();
+
+  return 0;
+}
+
+int ENF2()
+{
+  FORM();
+
   return 0;
 }
 
@@ -1942,12 +2001,11 @@ int gen_COD() /*интерпретации строк сте-*/
           {/*   14  */ RZR1, RZR2},
           {/*   15  */ TEL1, TEL2},
           {/*   16  */ ZNK1, ZNK2},
-          {/*   17  */ ITE1, ITE2},
+          {/*   17  */ ITH1, ITH2},
           {/*   18  */ COM1, COM2},
           {/*   19  */ DCF1, DCF2},
-          {/*   18  */ COM1, COM2},
-          {/*   19  */ DCF1, DCF2},
-
+          {/*   18  */ TLS1, TLS2},
+          {/*   19  */ ENF1, ENF2},
       };
 
   for (I2 = 0; I2 < L; I2++)              /* организация первого    */
