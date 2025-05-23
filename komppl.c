@@ -1321,8 +1321,8 @@ int AVI2()
           /*арифметического ПЛ1-опе-*/
           /*ратора присваивания     */
 
-  char *operand;
-  sprintf(operand, "%s,", R1);
+  char operand[10];
+  sprintf(operand, "%s,\0", R1);
 
   if (IFORMT == 1)                          /* если правая часть одно-*/
   {                                         /* термовая, то:          */
@@ -1372,23 +1372,35 @@ int AVI2()
        /* метического выражения  */
        /* двухтермовая, то:      */
   {
+    char registerName[10];
+
+    if (isDigit(FORMT[IFORMT - 1]))
+    {
+      sprintf(registerName, "@%c\0", FORMT[IFORMT - 1][0]);
+
+      strcpy(SYM[ISYM].NAME, registerName);
+      strcpy(SYM[ISYM].RAZR, "15");
+      strcpy(SYM[ISYM].INIT, FORMT[IFORMT - 1]);
+      SYM[ISYM].TYPE = 'B';
+      ISYM++;
+    }
+
     for (i = 0; i < ISYM; i++) /* если правый терм ариф- */
     {                          /* метического выражения  */
-                               /*определен в табл.SYM,то:*/
-      int is_digit = isDigit(FORMT[IFORMT - 1]);
+      /*определен в табл.SYM,то:*/
 
       if (!strcmp(SYM[i].NAME, FORMT[IFORMT - 1]) &&
               strlen(SYM[i].NAME) == strlen(FORMT[IFORMT - 1]) ||
-          is_digit)
+          registerName && !strcmp(SYM[i].NAME, registerName))
       {
-        if (SYM[i].TYPE == 'B' || is_digit) /* если тип правого опе-  */
-        {                                   /* ранда bin fixed, то:   */
+        if (SYM[i].TYPE == 'B') /* если тип правого опе-  */
+        {                       /* ранда bin fixed, то:   */
 
           if (STROKA[DST[I2].DST4 - /* если знак опер."+",то: */
                      strlen(FORMT[IFORMT - 1])] == '+')
           {
-            if (!is_digit && strcmp(SYM[i].RAZR, "15") /* если разрядность прав. */
-                                 <= 0)                 /* операнда <= 15, то:    */
+            if (strcmp(SYM[i].RAZR, "15") /* если разрядность прав. */
+                <= 0)                     /* операнда <= 15, то:    */
               memcpy(ASS_CARD._BUFCARD.OPERAC,
                      "AH", 2); /* формируем код ассембле-*/
             else               /* ровской операции "AH",а*/
@@ -1421,10 +1433,12 @@ int AVI2()
             /* ошибке                 */
           }
           /* формируем:             */
-          strcpy(ASS_CARD._BUFCARD.OPERAND,                              /* - первый операнд ассем-*/
-                 operand);                                               /*блеровской операции;    */
+          strcpy(ASS_CARD._BUFCARD.OPERAND, /* - первый операнд ассем-*/
+                 operand);                  /*блеровской операции;    */
+
+          char *secondOperand = registerName ? registerName : FORMT[IFORMT - 1];
           strcat(ASS_CARD._BUFCARD.OPERAND,                              /* - второй операнд ассем-*/
-                 FORMT[IFORMT - 1]);                                     /*блеровской операции;    */
+                 secondOperand);                                         /*блеровской операции;    */
           ASS_CARD._BUFCARD.OPERAND[strlen(ASS_CARD._BUFCARD.OPERAND)] = /* - разделяющий пробел;  */
               ' ';
           memcpy(ASS_CARD._BUFCARD.COMM,
@@ -1586,47 +1600,42 @@ int OEN2()
 
   for (i = 0; i < ISYM; i++)
   {
-    if (isalpha(SYM[i].NAME[0]))
-
+    if (SYM[i].TYPE == 'B')
     {
-      if (SYM[i].TYPE == 'B')
+      strcpy(ASS_CARD._BUFCARD.METKA,
+             SYM[i].NAME);
 
+      ASS_CARD._BUFCARD.METKA[strlen(ASS_CARD._BUFCARD.METKA)] = ' ';
+
+      memcpy(ASS_CARD._BUFCARD.OPERAC,
+             "DC", 2);
+
+      char symbol = ' ';
+
+      if (strcmp(SYM[i].RAZR, "15") <= 0)
+        symbol = 'H';
+      else
+        symbol = 'F';
+
+      int value = VALUE(SYM[i].INIT);
+
+      if (value)
       {
-        strcpy(ASS_CARD._BUFCARD.METKA,
-               SYM[i].NAME);
+        char valueStr[12] = "            ";
+        sprintf(valueStr, "%c\'%i\'", symbol, value);
 
-        ASS_CARD._BUFCARD.METKA[strlen(ASS_CARD._BUFCARD.METKA)] = ' ';
-
-        memcpy(ASS_CARD._BUFCARD.OPERAC,
-               "DC", 2);
-
-        char symbol = ' ';
-        
-        if (strcmp(SYM[i].RAZR, "15") <= 0)
-          symbol = 'H';
-        else
-          symbol = 'F';
-
-        int value = VALUE(SYM[i].INIT);
-
-        if (value)
-        {
-          char valueStr[12] = "            ";
-          sprintf(valueStr, "%c\'%i\'", symbol, value);
-
-          strcpy(ASS_CARD._BUFCARD.OPERAND, valueStr);
-          memcpy(ASS_CARD._BUFCARD.COMM,
-                 "Reserve memory and initialize it", 33);
-        }
-        else
-        {
-          ASS_CARD._BUFCARD.OPERAND[0] = symbol;
-          memcpy(ASS_CARD._BUFCARD.COMM,
-                 "Reserve memory for uninitialized variable", 42);
-        }
-
-        ZKARD();
+        strcpy(ASS_CARD._BUFCARD.OPERAND, valueStr);
+        memcpy(ASS_CARD._BUFCARD.COMM,
+               "Reserve memory and initialize it", 33);
       }
+      else
+      {
+        ASS_CARD._BUFCARD.OPERAND[0] = symbol;
+        memcpy(ASS_CARD._BUFCARD.COMM,
+               "Reserve memory for uninitialized variable", 42);
+      }
+
+      ZKARD();
     }
   }
 
@@ -1660,6 +1669,7 @@ int OEN2()
   // while ( FORMT [1][i] != '\x0' )                 /* ее операнда            */
   // ASS_CARD._BUFCARD.OPERAND [i] = FORMT [1][i++];/*         и              */
 
+  strcpy(ASS_CARD._BUFCARD.OPERAC, "END");
   memcpy(ASS_CARD._BUFCARD.COMM, /* построчного коментария */
          "End of program", 15);
 
@@ -1894,8 +1904,8 @@ int ITH2()
 {
   FORM(); // заполняет массив FORMT[3][8] — разобранное выражение
 
-  char *labelLess = "@LESS";
-  char *labelLarger = "@LARGER";
+  char *labelLess = "4, @LESS";
+  char *labelLarger = "15, @LARGER";
 
   char *variable1 = FORMT[0];
   PutToRegister(R1, variable1);
@@ -1922,14 +1932,14 @@ int ITH2()
   ZKARD();
 
   // JL @LESS
-  memcpy(ASS_CARD._BUFCARD.OPERAC, "JL", 2);
-  memcpy(ASS_CARD._BUFCARD.OPERAND, labelLess, strlen(labelLess));
+  memcpy(ASS_CARD._BUFCARD.OPERAC, "BC", 2);
+  strcpy(ASS_CARD._BUFCARD.OPERAND, labelLess);
   memcpy(ASS_CARD._BUFCARD.COMM, "If @R1 < @R2, jump to @LESS", 28);
   ZKARD();
 
   // JMP @LARGER
-  memcpy(ASS_CARD._BUFCARD.OPERAC, "JMP", 3);
-  memcpy(ASS_CARD._BUFCARD.OPERAND, labelLarger, strlen(labelLarger));
+  memcpy(ASS_CARD._BUFCARD.OPERAC, "BC", 3);
+  strcpy(ASS_CARD._BUFCARD.OPERAND, labelLarger);
   memcpy(ASS_CARD._BUFCARD.COMM, "else, jump to @LARGER", 22);
   ZKARD();
 
@@ -1967,10 +1977,10 @@ int TLS1()
 
 int TLS2()
 {
-  char *labelEndIf = "@ENDIF";
+  char *labelEndIf = "15, @ENDIF";
 
   // JMP @LARGER
-  memcpy(ASS_CARD._BUFCARD.OPERAC, "JMP", 3);
+  memcpy(ASS_CARD._BUFCARD.OPERAC, "BC", 3);
   memcpy(ASS_CARD._BUFCARD.OPERAND, labelEndIf, strlen(labelEndIf));
   memcpy(ASS_CARD._BUFCARD.COMM, "jump to @ENDIF", 15);
   ZKARD();
