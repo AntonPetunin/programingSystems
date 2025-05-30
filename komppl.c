@@ -1380,7 +1380,7 @@ int AVI2()
 
     if (isDigit(FORMT[IFORMT - 1]))
     {
-      sprintf(registerName, "@%c\0", FORMT[IFORMT - 1][0]);
+      // sprintf(registerName, "@%c\0", FORMT[IFORMT - 1][0]);
 
       strcpy(SYM[ISYM].NAME, registerName);
       strcpy(SYM[ISYM].RAZR, "15");
