@@ -68,7 +68,7 @@ union               /*шаблон для генерации    */
   char BUFCARD[80]; /*на АССЕМБЛЕРЕ IBM 370   */
   struct
   {
-    char METKA[9];
+    char METKA[8];
     char PROB1;
     char OPERAC[5];
     char PROB2;
@@ -937,9 +937,7 @@ long int VALUE(char *s) /* п р о г р а м м а      */
   {
     char hexbuf[32] = {0};
     int j = 0;
-    int i = 2;
-
-    for (; s[i] != '\0' && s[i] != '\'' && j < 30; i++)
+    for (int i = 2; s[i] != '\0' && s[i] != '\'' && j < 30; i++)
     {
       if (isxdigit((unsigned char)s[i]))
       {
@@ -1326,7 +1324,7 @@ int AVI2()
           /*ратора присваивания     */
 
   char operand[10];
-  sprintf(operand, "%s,\0", R1);
+  sprintf(operand, "%s,", R1);
 
   if (IFORMT == 1)                          /* если правая часть одно-*/
   {                                         /* термовая, то:          */
@@ -1380,7 +1378,7 @@ int AVI2()
 
     if (isDigit(FORMT[IFORMT - 1]))
     {
-      // sprintf(registerName, "@%c\0", FORMT[IFORMT - 1][0]);
+      sprintf(registerName, "@%c", FORMT[IFORMT - 1][0]);
 
       strcpy(SYM[ISYM].NAME, registerName);
       strcpy(SYM[ISYM].RAZR, "15");
@@ -1883,9 +1881,7 @@ char *REGISTERS[MAX_REGISTERS][2] =
 
 void PutToRegister(char *reg, char *ipe)
 {
-  int i = 0;
-
-  for (; i < MAX_REGISTERS; i++)
+  for (int i = 0; i < MAX_REGISTERS; i++)
   {
     if (!strcmp(REGISTERS[i][1], reg))
     {
@@ -1912,8 +1908,8 @@ int ITH2()
 {
   FORM(); // заполняет массив FORMT[3][8] — разобранное выражение
 
-  char *labelLess = "4, @LESS";
-  char *labelLarger = "15, @LARGER";
+  char *jmpLabelLess = "4, @LESS";
+  char *jmpLabelLarger = "15, @LARGER";
 
   char *variable1 = FORMT[0];
   PutToRegister(R1, variable1);
@@ -1941,18 +1937,18 @@ int ITH2()
 
   // JL @LESS
   memcpy(ASS_CARD._BUFCARD.OPERAC, "BC", 2);
-  strcpy(ASS_CARD._BUFCARD.OPERAND, labelLess);
+  strcpy(ASS_CARD._BUFCARD.OPERAND, jmpLabelLess);
   memcpy(ASS_CARD._BUFCARD.COMM, "If @R1 < @R2, jump to @LESS", 28);
   ZKARD();
 
   // JMP @LARGER
   memcpy(ASS_CARD._BUFCARD.OPERAC, "BC", 3);
-  strcpy(ASS_CARD._BUFCARD.OPERAND, labelLarger);
+  strcpy(ASS_CARD._BUFCARD.OPERAND, jmpLabelLarger);
   memcpy(ASS_CARD._BUFCARD.COMM, "else, jump to @LARGER", 22);
   ZKARD();
 
   // @LESS:
-  strcpy(ASS_CARD._BUFCARD.METKA, labelLess);
+  strcpy(ASS_CARD._BUFCARD.METKA, "@LESS");
 
   return 0;
 }
@@ -2177,9 +2173,7 @@ main1:                            /* по завершении чтения   */
   }
   else /* иначе делаем           */
   {
-    int code = gen_COD();
-
-    switch (code) /* семантическое вычислен.*/
+    switch (gen_COD()) /* семантическое вычислен.*/
     {
     case 0: /*если код завершения = 0,*/
             /* то:                    */
