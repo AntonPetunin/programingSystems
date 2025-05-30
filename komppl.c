@@ -68,7 +68,7 @@ union               /*шаблон для генерации    */
   char BUFCARD[80]; /*на АССЕМБЛЕРЕ IBM 370   */
   struct
   {
-    char METKA[8];
+    char METKA[10];
     char PROB1;
     char OPERAC[5];
     char PROB2;
@@ -1326,7 +1326,7 @@ int AVI2()
           /*ратора присваивания     */
 
   char operand[10];
-  sprintf(operand, "%s,\0", R1);
+  sprintf(operand, "%s,\0", "@R1");
 
   if (IFORMT == 1)                          /* если правая часть одно-*/
   {                                         /* термовая, то:          */
@@ -1727,7 +1727,7 @@ int OPA2()
                  "ST", 2);
 
         char *operand;
-        sprintf(operand, "%s,", R1);
+        sprintf(operand, "%s,", "@R1");
         strcpy(ASS_CARD._BUFCARD.OPERAND, /*       доформировать    */
                operand);                  /*          операнды      */
 
@@ -1915,22 +1915,22 @@ int ITH2()
   char *labelLess = "4, @LESS";
   char *labelLarger = "15, @LARGER";
 
-  char *variable1 = FORMT[0] ? FORMT[0] : "";
-  PutToRegister(R1, variable1);
+  char *variable1 = FORMT[0] ? FORMT[0] : " ";
+  // PutToRegister("@R1", variable1);
 
   // LH R1, FORMT[1]
   memcpy(ASS_CARD._BUFCARD.OPERAC, "LH", 2);
-  sprintf(ASS_CARD._BUFCARD.OPERAND, "%s,%s", R1, variable1);
-  sprintf(ASS_CARD._BUFCARD.COMM, "Load value of %sinto register %s", variable1, R1);
+  sprintf(ASS_CARD._BUFCARD.OPERAND, "%s,%s", "@R1", variable1);
+  sprintf(ASS_CARD._BUFCARD.COMM, "Load value of %sinto register %s", variable1, "@R1");
   ZKARD();
 
-  char *variable2 = FORMT[1] ? FORMT[1] : "";
-  PutToRegister(R2, variable2);
+  char *variable2 = FORMT[1] ? FORMT[1] : " ";
+  // PutToRegister("@R2", variable2);
 
   // LH R2, FORMT[2]
   memcpy(ASS_CARD._BUFCARD.OPERAC, "LH", 2);
-  sprintf(ASS_CARD._BUFCARD.OPERAND, "%s,%s", R2, variable2);
-  sprintf(ASS_CARD._BUFCARD.COMM, "Load value of %sinto register %s", variable2, R2);
+  sprintf(ASS_CARD._BUFCARD.OPERAND, "%s,%s", "@R2", variable2);
+  sprintf(ASS_CARD._BUFCARD.COMM, "Load value of %sinto register %s", variable2, "@R2");
   ZKARD();
 
   // CR @R1,@R2
@@ -2157,12 +2157,15 @@ main1:                            /* по завершении чтения   */
                                      /* выходного ассемблеров- */
                                      /* ского файла            */
 
+  printf("Compress\n");
   compress_ISXTXT(); /* лексический анализ     */
                      /* исходного текста       */
 
+  printf("Build_TPR\n");
   build_TPR(); /* построение матрицы     */
                /* преемников             */
 
+  printf("Sint_anal\n");
   if ((sint_ANAL())) /* синтаксический анализ  */
   {                  /* исходного текста       */
     STROKA[I4 + 20] = '\x0';
@@ -2177,6 +2180,8 @@ main1:                            /* по завершении чтения   */
   }
   else /* иначе делаем           */
   {
+    printf("Sint_anal passed\n");
+
     switch (gen_COD()) /* семантическое вычислен.*/
     {
     case 0: /*если код завершения = 0,*/
