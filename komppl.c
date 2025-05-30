@@ -1325,8 +1325,7 @@ int AVI2()
           /*арифметического ПЛ1-опе-*/
           /*ратора присваивания     */
 
-  char operand[10];
-  sprintf(operand, "%s,", R1);
+  char operand[10] = "@R1, ";
 
   if (IFORMT == 1)                          /* если правая часть одно-*/
   {                                         /* термовая, то:          */
@@ -1376,7 +1375,7 @@ int AVI2()
        /* метического выражения  */
        /* двухтермовая, то:      */
   {
-    char registerName[10];
+    char registerName[10] = "";
 
     if (isDigit(FORMT[IFORMT - 1]))
     {
@@ -1440,11 +1439,12 @@ int AVI2()
           strcpy(ASS_CARD._BUFCARD.OPERAND, /* - первый операнд ассем-*/
                  operand);                  /*блеровской операции;    */
 
-          char *secondOperand = registerName ? registerName : FORMT[IFORMT - 1];
+          char *secondOperand = strlen(registerName) ? registerName : FORMT[IFORMT - 1];
           strcat(ASS_CARD._BUFCARD.OPERAND,                              /* - второй операнд ассем-*/
                  secondOperand);                                         /*блеровской операции;    */
           ASS_CARD._BUFCARD.OPERAND[strlen(ASS_CARD._BUFCARD.OPERAND)] = /* - разделяющий пробел;  */
               ' ';
+
           memcpy(ASS_CARD._BUFCARD.COMM,
                  "Formation of an intermediate value", /* - построчный коментарий*/
                  35);
@@ -1726,10 +1726,8 @@ int OPA2()
           memcpy(ASS_CARD._BUFCARD.OPERAC, /* команду записи слова   */
                  "ST", 2);
 
-        char *operand;
-        sprintf(operand, "%s,", R1);
         strcpy(ASS_CARD._BUFCARD.OPERAND, /*       доформировать    */
-               operand);                  /*          операнды      */
+               "@R1, ");                    /*          операнды      */
 
         strcat(ASS_CARD._BUFCARD.OPERAND, /*           команды      */
                FORMT[0]);
