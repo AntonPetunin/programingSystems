@@ -13,10 +13,10 @@
 /* п р е д е л ь н ы е    */
 /* размеры:               */
 #define MAXNISXTXT 50 /* - исходного текста;    */
-#define NSINT 262     /* - табл.синтакс.правил; */
+#define NSINT 260     /* - табл.синтакс.правил; */
 #define NCEL 20       /* - стека целей;         */
 #define NDST 500      /* - стека достижений;    */
-#define NVXOD 59      /* - табл.входов;         */
+#define NVXOD 58      /* - табл.входов;         */
 #define NSTROKA 200   /* - строки плотн.текста; */
 #define NNETRM 21     /* - списка нетерминалов; */
 #define MAXLTXT 50    /* - выходного текста;    */
@@ -1380,7 +1380,7 @@ int AVI2()
 
     if (isDigit(FORMT[IFORMT - 1]))
     {
-      // sprintf(registerName, "@%c\0", FORMT[IFORMT - 1][0]);
+      sprintf(registerName, "@%c", FORMT[IFORMT - 1][0]);
 
       strcpy(SYM[ISYM].NAME, registerName);
       strcpy(SYM[ISYM].RAZR, "15");
@@ -1915,7 +1915,7 @@ int ITH2()
   char *labelLess = "4, @LESS";
   char *labelLarger = "15, @LARGER";
 
-  char *variable1 = FORMT[0];
+  char *variable1 = FORMT[0] ? FORMT[0] : "";
   PutToRegister(R1, variable1);
 
   // LH R1, FORMT[1]
@@ -1924,7 +1924,7 @@ int ITH2()
   sprintf(ASS_CARD._BUFCARD.COMM, "Load value of %sinto register %s", variable1, R1);
   ZKARD();
 
-  char *variable2 = FORMT[1];
+  char *variable2 = FORMT[1] ? FORMT[1] : "";
   PutToRegister(R2, variable2);
 
   // LH R2, FORMT[2]
