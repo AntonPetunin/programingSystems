@@ -937,7 +937,9 @@ long int VALUE(char *s) /* п р о г р а м м а      */
   {
     char hexbuf[32] = {0};
     int j = 0;
-    for (int i = 2; s[i] != '\0' && s[i] != '\'' && j < 30; i++)
+    int i = 2;
+
+    for (; s[i] != '\0' && s[i] != '\'' && j < 30; i++)
     {
       if (isxdigit((unsigned char)s[i]))
       {
@@ -1881,7 +1883,8 @@ char *REGISTERS[MAX_REGISTERS][2] =
 
 void PutToRegister(char *reg, char *ipe)
 {
-  for (int i = 0; i < MAX_REGISTERS; i++)
+  int i = 0;
+  for (; i < MAX_REGISTERS; i++)
   {
     if (!strcmp(REGISTERS[i][1], reg))
     {
