@@ -1595,8 +1595,8 @@ int OEN2()
 
   char *labelEndIf = "@ENDIF";
   strcpy(ASS_CARD._BUFCARD.METKA, labelEndIf);
-  memcpy(ASS_CARD._BUFCARD.OPERAC, "BCR", 3);      /* операнды команды и     */
-  memcpy(ASS_CARD._BUFCARD.OPERAND, "15,@R14", 7); /* операнды команды и     */
+  memcpy(ASS_CARD._BUFCARD.OPERAC, "BCR", 4);      /* операнды команды и     */
+  memcpy(ASS_CARD._BUFCARD.OPERAND, "15,@R14", 8); /* операнды команды и     */
 
   memcpy(ASS_CARD._BUFCARD.COMM,                /* поле построчного комен-*/
          "Return to the operating system", 31); /* тария                  */
@@ -1771,35 +1771,35 @@ int OPA2()
 /* ПЛ1-программы          */
 int OPR2()
 {
-  char i = 0;
-  FORM(); /* форматируем оператор   */
-          /* ПЛ1 - "начало процедур-*/
-          /* ного блока"            */
-  while (FORMT[0][i] != '\x0')
-    ASS_CARD._BUFCARD.METKA[i] = FORMT[0][i++]; /* нулевой терм используем*/
-                                                /* как метку в START-псев-*/
-                                                /* дооперации Ассемблера  */
+  // char i = 0;
+  // FORM(); /* форматируем оператор   */
+  //         /* ПЛ1 - "начало процедур-*/
+  //         /* ного блока"            */
+  // while (FORMT[0][i] != '\x0')
+  //   ASS_CARD._BUFCARD.METKA[i] = FORMT[0][i++]; /* нулевой терм используем*/
+  //                                               /* как метку в START-псев-*/
+  //                                               /* дооперации Ассемблера  */
 
-  memcpy(ASS_CARD._BUFCARD.OPERAC, "START", 5); /* достраиваем код и опе- */
-  memcpy(ASS_CARD._BUFCARD.OPERAND, "0", 1);    /* ранды  в  START-псевдо-*/
-  memcpy(ASS_CARD._BUFCARD.COMM,                /* операции Ассемблера    */
-         "Program start, relative address counter set to zero\n", 52);
-  ZKARD(); /* запоминаем карту Ассем-*/
-           /* блера                  */
+  // memcpy(ASS_CARD._BUFCARD.OPERAC, "START", 5); /* достраиваем код и опе- */
+  // memcpy(ASS_CARD._BUFCARD.OPERAND, "0", 1);    /* ранды  в  START-псевдо-*/
+  // memcpy(ASS_CARD._BUFCARD.COMM,                /* операции Ассемблера    */
+  //        "Program start, relative address counter set to zero\n", 52);
+  // ZKARD(); /* запоминаем карту Ассем-*/
+  //          /* блера                  */
 
-  memcpy(ASS_CARD._BUFCARD.OPERAC, "BALR", 4); /* формируем BALR-операцию*/
-  memcpy(ASS_CARD._BUFCARD.OPERAND,            /* Ассемблера             */
-         "@RBASE,0", 8);
-  memcpy(ASS_CARD._BUFCARD.COMM,
-         "Load base address into register @RBASE", 39);
-  ZKARD(); /* и запоминаем ее        */
+  // memcpy(ASS_CARD._BUFCARD.OPERAC, "BALR", 4); /* формируем BALR-операцию*/
+  // memcpy(ASS_CARD._BUFCARD.OPERAND,            /* Ассемблера             */
+  //        "@RBASE,0", 8);
+  // memcpy(ASS_CARD._BUFCARD.COMM,
+  //        "Load base address into register @RBASE", 39);
+  // ZKARD(); /* и запоминаем ее        */
 
-  memcpy(ASS_CARD._BUFCARD.OPERAC, "USING", 5); /* формируем USING-псевдо-*/
-  memcpy(ASS_CARD._BUFCARD.OPERAND,             /* операцию Ассемблера    */
-         "*,@RBASE", 8);
-  memcpy(ASS_CARD._BUFCARD.COMM,
-         "Declare @RBASE as base register", 32);
-  ZKARD();
+  // memcpy(ASS_CARD._BUFCARD.OPERAC, "USING", 5); /* формируем USING-псевдо-*/
+  // memcpy(ASS_CARD._BUFCARD.OPERAND,             /* операцию Ассемблера    */
+  //        "*,@RBASE", 8);
+  // memcpy(ASS_CARD._BUFCARD.COMM,
+  //        "Declare @RBASE as base register", 32);
+  // ZKARD();
 
   return 0; /* завершить подпрограмму */
 }
