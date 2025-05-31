@@ -1931,21 +1931,21 @@ int ITH2()
   ZKARD();
 
   // CR @R1,@R2
-  memcpy(ASS_CARD._BUFCARD.OPERAC, "CMP", 3);
+  memcpy(ASS_CARD._BUFCARD.OPERAC, "CR", 2);
   strcpy(ASS_CARD._BUFCARD.OPERAND, "@R1,@R2");
   memcpy(ASS_CARD._BUFCARD.COMM, "Compare values in @R1 and @R2", 30);
   ZKARD();
 
-  // JL @LESS
+  // BCR 4, @LESS
   memcpy(ASS_CARD._BUFCARD.OPERAC, "BC", 2);
   strcpy(ASS_CARD._BUFCARD.OPERAND, jmpLabelLess);
-  memcpy(ASS_CARD._BUFCARD.COMM, "If @R1 < @R2, jump to @LESS", 28);
+  memcpy(ASS_CARD._BUFCARD.COMM, "If @R1 < @R2, jump to @LESS", 21);
   ZKARD();
 
-  // JMP @LARGER
-  memcpy(ASS_CARD._BUFCARD.OPERAC, "BC", 3);
+  // BC 15, @LARGER
+  memcpy(ASS_CARD._BUFCARD.OPERAC, "BC", 2);
   strcpy(ASS_CARD._BUFCARD.OPERAND, jmpLabelLarger);
-  memcpy(ASS_CARD._BUFCARD.COMM, "else, jump to @LARGER", 22);
+  memcpy(ASS_CARD._BUFCARD.COMM, "else, jump to @LARGER", 21);
   ZKARD();
 
   // @LESS:
