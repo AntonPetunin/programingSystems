@@ -1936,10 +1936,10 @@ int ITH2()
   memcpy(ASS_CARD._BUFCARD.COMM, "Compare values in @R1 and @R2", 30);
   ZKARD();
 
-  // BCR 4, @LESS
+  // BC 4, @LESS
   memcpy(ASS_CARD._BUFCARD.OPERAC, "BC", 2);
   strcpy(ASS_CARD._BUFCARD.OPERAND, jmpLabelLess);
-  memcpy(ASS_CARD._BUFCARD.COMM, "If @R1 < @R2, jump to @LESS", 21);
+  memcpy(ASS_CARD._BUFCARD.COMM, "If @R1 < @R2, jump to @LESS", 27);
   ZKARD();
 
   // BC 15, @LARGER
@@ -1984,7 +1984,7 @@ int TLS2()
 {
   char *labelEndIf = "15, @ENDIF";
 
-  // JMP @LARGER
+  // BC 15, @LARGER
   memcpy(ASS_CARD._BUFCARD.OPERAC, "BC", 3);
   memcpy(ASS_CARD._BUFCARD.OPERAND, labelEndIf, strlen(labelEndIf));
   memcpy(ASS_CARD._BUFCARD.COMM, "jump to @ENDIF", 15);
